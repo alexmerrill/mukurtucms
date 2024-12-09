@@ -1,3 +1,142 @@
+## Mukurtu 3.0.6
+- Updated to Drupal 7.102
+- Updated jQuery Update module to 7.x-4.1
+- Fixed bug on deleting collections
+
+#### Manual Upgrade Steps
+This version requires a database update.
+- database update: `drush updb`
+
+## Mukurtu 3.0.5
+- Updated to Drupal 7.97
+- Contrib module updates
+- Improved PHP 8 compatibility
+
+#### Manual Upgrade Steps
+This version requires a database update.
+- database update: `drush updb`
+
+## Mukurtu 3.0.4
+- Updated to Drupal 7.95
+- Contrib module security updates
+- Add support for PHP 8
+
+#### Manual Upgrade Steps
+This version requires a database update.
+- database update: `drush updb`
+
+## Mukurtu 3.0.3
+- Updated to Drupal 7.91
+- Contrib module security updates
+- Fixed a bug where newer versions of Chrome could not open collapsible fieldsets.
+
+#### Manual Upgrade Steps
+This version does not require any database updates.
+
+## Mukurtu 3.0.2
+- Updated to Drupal 7.88
+- Updated Colorbox
+
+#### Manual Upgrade Steps
+This version does not require any database updates.
+
+## Mukurtu 3.0.1
+- Updated to Drupal 7.87
+- Change default permissions for 'delete all items' option in feeds
+- Updated contrib modules for PHP 7.4
+
+#### Manual Upgrade Steps
+This version requires both a database update and a cache clear.
+- database update: `drush updb`
+- cache clear: `drush cc all`
+
+## Mukurtu 3.0.0
+- Added support for the new version of [Mukurtu Mobile](https://mukurtu.org/mobile/)
+- Updated to Drupal 7.81
+- Many contrib module updates
+
+#### Manual Upgrade Steps
+This version requires both database and feature updates.
+Many features have been changed. It is strongly recommended to have a current backup of your site before updating.
+- database update: `drush updb`
+- revert all features: `drush fra`
+
+## Mukurtu 2.1.8
+- Updated to Drupal 7.80
+- Updated handling of Soundcloud API
+- Fixed a date format bug for original date field import
+
+#### Manual Upgrade Steps
+- database update: `drush updb`
+
+## Mukurtu 2.1.7
+- Updated to Drupal 7.78
+- Fixed a bug where imported content would not use the correct field language
+
+#### Manual Upgrade Steps
+- database update: `drush updb`
+
+## Mukurtu 2.1.6
+- Updated to Drupal 7.74
+- Fixed a bug where new imported content would not use the default site language
+- Fixed a bug where taxonomy terms may be imported with the incorrect language
+- Changed the method used to populate some entity reference fields. Item edit forms on sites with a large number of items may load faster now
+- Updated contrib modules to add support for PHP 7.3+
+
+#### Manual Upgrade Steps
+- database update: `drush updb`
+
+## Mukurtu 2.1.5
+- Updated to Drupal 7.73
+- Fixed a bug where new content would not be correctly added to collections/related content fields
+- Fixed a bug where the 'View published content' permission could be incorrectly overridden
+
+#### Manual Upgrade Steps
+- database update: `drush updb`
+
+## Mukurtu 2.1.4
+- Updated to Drupal 7.70
+- Added a media export page
+- Fixed a bug where in some cases when exporting only media, the binary file would not export
+- The recent content list in the dashboard now includes edit links
+- Fixed a bug where exports may result in an empty zip file on some systems
+- Made the "tags" field name consistent across all media types
+- Mukurtu admins can now administer content warnings
+- Fixed some color inconsistencies on the red & bone color scheme
+- Improved the display of the small hero image with welcome message
+
+#### Manual Upgrade Steps
+- database update: `drush updb`
+- revert features: `drush fr ma_scald`
+
+## Mukurtu 2.1.3
+- Content type specific related fields (e.g., “Related Digital Heritage Items”) have been generalized and consolidated into a single “Related Content” field
+- The [TK Clan](https://localcontexts.org/tk/cl/1.0) label has been added
+- Default image style resolution has been doubled for the most common image styles
+- Fixed permission issue that could cause CSV exports to fail for some user roles
+- Switched default browse sort to search relevance
+- The Original Date field will no longer auto-fill the current date during import
+- Created a custom HTTP 403 error page
+- The link to add users to a community now works correctly on sites installed as a sub-folder
+- Theme management links now link to the correct sub-theme
+- Related items featuring audio will now correctly use the HTML 5 player on the digital heritage item page
+- Fixed some minor theme inconsistencies
+- Reduced the number of common repeated PHP notices and warnings in the watchdog log
+- Updated to Drupal 7.69
+- Updated contrib modules
+
+#### Manual Upgrade Steps
+- database update: `drush updb`
+- revert features: `drush fra`
+
+## Mukurtu 2.1.2
+- Fixed a bug that caused the import of some audio/video files to fail
+- Adjusted the default Mukurtu theme to make sub-theming easier
+- Security: Update to Drupal 7.67
+
+#### Manual Upgrade Steps
+- database update: `drush updb`
+
 ## Mukurtu 2.1.1
 - Fixed bug that caused some sites to not be able to create sub-collections
 - During import, original date fields will no longer default to the current date if left empty

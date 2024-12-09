@@ -65,7 +65,7 @@ function googleanalytics_requirements($phase) {
 
   if ($phase == 'runtime') {
     // Raise warning if Google user account has not been set yet.
-    if (!preg_match('/^UA-\d+-\d+$/', variable_get('googleanalytics_account', 'UA-'))) {
+    if (!_google_analytics_valid_property_id(variable_get('googleanalytics_account', 'UA-'))) {
       $requirements['googleanalytics_account'] = array(
         'title' => $t('Google Analytics module'),
         'description' => $t('Google Analytics module has not been configured yet. Please configure its settings from the <a href="@url">Google Analytics settings page</a>.', array('@url' => url('admin/config/system/googleanalytics'))),
@@ -104,7 +104,7 @@ function googleanalytics_update_6001() {
   variable_set('googleanalytics_visibility', 0);
 
   // Remove tracking from all administrative pages, see:
-  // http://drupal.org/node/34970.
+  // https://drupal.org/node/34970.
   $pages = array(
     'admin*',
     'user*',
@@ -237,7 +237,7 @@ function googleanalytics_update_6006() {
  *
  * This is a data protection and privacy law change. For more information see
  * Google Analytics terms of use section 8.1:
- * http://www.google.com/analytics/en-GB/tos.html
+ * https://www.google.com/analytics/en-GB/tos.html
  */
 function googleanalytics_update_6007() {
   $profile_fields = variable_get('googleanalytics_segmentation', array());

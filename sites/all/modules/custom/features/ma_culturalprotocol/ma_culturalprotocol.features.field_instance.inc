@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ma_culturalprotocol.features.field_instance.inc
@@ -32,6 +33,8 @@ function ma_culturalprotocol_field_default_field_instances() {
     'required' => TRUE,
     'settings' => array(
       'context' => '',
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'dnd_enabled' => 0,
       'mee_enabled' => 0,
       'text_processing' => 1,
@@ -81,6 +84,13 @@ function ma_culturalprotocol_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 1,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
       'teaser' => array(
         'label' => 'inline',
         'module' => 'text',
@@ -99,6 +109,8 @@ function ma_culturalprotocol_field_default_field_instances() {
     'settings' => array(
       'context' => 'debug',
       'context_default' => 'sdl_editor_representation',
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'display_summary' => 0,
       'dnd_enabled' => 1,
       'mee_enabled' => 0,
@@ -113,7 +125,165 @@ function ma_culturalprotocol_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 5,
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'node-cultural_protocol_group-field_comm_dh_items'.
+  $field_instances['node-cultural_protocol_group-field_comm_dh_items'] = array(
+    'bundle' => 'cultural_protocol_group',
+    'custom_add_another' => '',
+    'custom_remove' => '',
+    'default_value' => NULL,
+    'default_value_function' => '',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => FALSE,
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 22,
+      ),
+      'featured_content' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => 0,
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'display_label' => '',
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_comm_dh_items',
+    'label' => 'Recent Digital Heritage Items',
+    'required' => 0,
+    'settings' => array(
+      'behaviors' => array(
+        'prepopulate' => array(
+          'status' => 0,
+        ),
+      ),
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'select2_integration' => array(
+        'styling' => array(
+          'dropdownAutoWidth' => 0,
+          'placeholder' => '',
+        ),
+        'use_select2' => 0,
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'treeable' => 0,
+        'use_select2' => FALSE,
+      ),
+      'type' => 'options_select',
+      'weight' => 50,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'node-cultural_protocol_group-field_dhan_notified_users'.
+  $field_instances['node-cultural_protocol_group-field_dhan_notified_users'] = array(
+    'bundle' => 'cultural_protocol_group',
+    'default_value' => NULL,
+    'default_value_function' => '',
+    'deleted' => 0,
+    'description' => 'Protocol Stewards that are notified of insertions, changes, and deletions of Digital Heritage nodes in this Protocol.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => FALSE,
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 22,
+      ),
+      'featured_content' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'display_label' => '',
+    'ds_extras_field_template' => '',
+    'entity_type' => 'node',
+    'field_name' => 'field_dhan_notified_users',
+    'label' => 'Notified Protocol Stewards',
+    'required' => 0,
+    'settings' => array(
+      'behaviors' => array(
+        'prepopulate' => array(
+          'status' => 0,
+        ),
+      ),
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 1,
+        'treeable' => 0,
+        'use_select2' => FALSE,
+      ),
+      'type' => 'options_select',
+      'weight' => 7,
     ),
   );
 
@@ -147,6 +317,12 @@ function ma_culturalprotocol_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 22,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 38,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -160,6 +336,8 @@ function ma_culturalprotocol_field_default_field_instances() {
     'label' => 'Membership List Options',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -167,6 +345,7 @@ function ma_culturalprotocol_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => '',
+        'use_select2' => FALSE,
       ),
       'type' => 'options_select',
       'weight' => 48,
@@ -202,6 +381,12 @@ function ma_culturalprotocol_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 23,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 39,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -215,6 +400,8 @@ function ma_culturalprotocol_field_default_field_instances() {
     'label' => 'Pre-Actions',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -258,6 +445,12 @@ function ma_culturalprotocol_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 24,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 36,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -271,6 +464,8 @@ function ma_culturalprotocol_field_default_field_instances() {
     'label' => 'Signup Permissions',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -278,6 +473,7 @@ function ma_culturalprotocol_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(
         'apply_chosen' => '',
+        'use_select2' => FALSE,
       ),
       'type' => 'options_select',
       'weight' => 2,
@@ -314,6 +510,12 @@ function ma_culturalprotocol_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 27,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 37,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -326,6 +528,8 @@ function ma_culturalprotocol_field_default_field_instances() {
     'label' => 'Automatically add new users to this protocol',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -369,6 +573,16 @@ function ma_culturalprotocol_field_default_field_instances() {
         'type' => 'mukurtu_scald_banner_image',
         'weight' => 0,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'hidden',
+        'module' => 'atom_reference',
+        'settings' => array(
+          'link' => 0,
+          'override' => 0,
+        ),
+        'type' => 'ma_colorbox',
+        'weight' => 1,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -382,6 +596,8 @@ function ma_culturalprotocol_field_default_field_instances() {
     'label' => 'Banner Image',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'referencable_types' => array(
         'audio' => 0,
         'file' => 0,
@@ -432,6 +648,12 @@ function ma_culturalprotocol_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 25,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 35,
+      ),
       'teaser' => array(
         'label' => 'hidden',
         'module' => 'atom_reference',
@@ -449,6 +671,8 @@ function ma_culturalprotocol_field_default_field_instances() {
     'label' => 'Thumbnail Image',
     'required' => 0,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'referencable_types' => array(
         'audio' => 0,
         'file' => 0,
@@ -500,6 +724,12 @@ Strict - This cultural protocol and the items within it are shared with, visible
         'type' => 'hidden',
         'weight' => 28,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 34,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -512,6 +742,8 @@ Strict - This cultural protocol and the items within it are shared with, visible
     'label' => 'Sharing Protocol',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'view modes' => array(
@@ -571,6 +803,12 @@ Strict - This cultural protocol and the items within it are shared with, visible
         'type' => 'hidden',
         'weight' => 30,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 32,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -583,6 +821,8 @@ Strict - This cultural protocol and the items within it are shared with, visible
     'label' => 'Group type',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'view modes' => array(
@@ -645,6 +885,12 @@ Strict - This cultural protocol and the items within it are shared with, visible
         'type' => 'hidden',
         'weight' => 26,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -657,6 +903,8 @@ Strict - This cultural protocol and the items within it are shared with, visible
     'label' => 'Group register',
     'required' => TRUE,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'view modes' => array(
@@ -681,6 +929,8 @@ Strict - This cultural protocol and the items within it are shared with, visible
   // Exported field_instance: 'node-cultural_protocol_group-og_group_ref'.
   $field_instances['node-cultural_protocol_group-og_group_ref'] = array(
     'bundle' => 'cultural_protocol_group',
+    'custom_add_another' => '',
+    'custom_remove' => '',
     'default_value' => array(),
     'default_value_function' => 'entityreference_prepopulate_field_default_value',
     'deleted' => 0,
@@ -726,6 +976,16 @@ Strict - This cultural protocol and the items within it are shared with, visible
         'type' => 'textformatter_list',
         'weight' => 5,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'bypass_access' => 0,
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 4,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -752,6 +1012,15 @@ Strict - This cultural protocol and the items within it are shared with, visible
           'status' => 1,
         ),
       ),
+      'custom_add_another' => '',
+      'custom_remove' => '',
+      'select2_integration' => array(
+        'styling' => array(
+          'dropdownAutoWidth' => 0,
+          'placeholder' => '',
+        ),
+        'use_select2' => 1,
+      ),
       'user_register_form' => FALSE,
     ),
     'view modes' => array(
@@ -770,7 +1039,9 @@ Strict - This cultural protocol and the items within it are shared with, visible
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'apply_chosen' => 1,
+        'apply_chosen' => 0,
+        'treeable' => 0,
+        'use_select2' => FALSE,
       ),
       'type' => 'options_select',
       'weight' => 4,
@@ -813,6 +1084,12 @@ Strict - This cultural protocol and the items within it are shared with, visible
         'type' => 'hidden',
         'weight' => 29,
       ),
+      'mukurtu_mobile' => array(
+        'label' => 'inline',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 33,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -825,6 +1102,8 @@ Strict - This cultural protocol and the items within it are shared with, visible
     'label' => 'Group roles and permissions',
     'required' => 1,
     'settings' => array(
+      'custom_add_another' => '',
+      'custom_remove' => '',
       'user_register_form' => FALSE,
     ),
     'view modes' => array(
@@ -861,12 +1140,15 @@ Strict - This cultural protocol and the items within it are shared with, visible
   t('Group roles and permissions');
   t('Group type');
   t('Membership List Options');
+  t('Notified Protocol Stewards');
   t('Open - This cultural protocol and the items within it are shared with, visible, and accessible to any site visitor, regardless of protocol membership<br>
 Strict - This cultural protocol and the items within it are shared with, visible, and accessible to its cultural protocol members only ');
   t('Parent Community');
   t('Please select the Community to which this Cultural Protocol belongs. You may select multiple Communities. You may only select or deselect Parent Communities for which you are a Community Manager.
 ');
   t('Pre-Actions');
+  t('Protocol Stewards that are notified of insertions, changes, and deletions of Digital Heritage nodes in this Protocol.');
+  t('Recent Digital Heritage Items');
   t('Select Group if you want this content type to be a group that can be associated to users, content and used for access settings.');
   t('Sharing Protocol');
   t('Signup Permissions');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ma_collaboration_tools.ds.inc
@@ -517,47 +518,6 @@ function ma_collaboration_tools_ds_layout_settings_info() {
 
   $ds_layout = new stdClass();
   $ds_layout->api_version = 1;
-  $ds_layout->id = 'field_collection_item|field_notification_email|full';
-  $ds_layout->entity_type = 'field_collection_item';
-  $ds_layout->bundle = 'field_notification_email';
-  $ds_layout->view_mode = 'full';
-  $ds_layout->layout = 'ds_1col';
-  $ds_layout->settings = array(
-    'regions' => array(
-      'ds_content' => array(
-        0 => 'field_notification_date_gene',
-        1 => 'field_notification_author',
-        2 => 'field_notification_comment',
-        3 => 'field_notification_subject',
-        4 => 'field_notification_body',
-      ),
-    ),
-    'fields' => array(
-      'field_notification_date_gene' => 'ds_content',
-      'field_notification_author' => 'ds_content',
-      'field_notification_comment' => 'ds_content',
-      'field_notification_subject' => 'ds_content',
-      'field_notification_body' => 'ds_content',
-    ),
-    'classes' => array(
-      'layout_class' => array(
-        '' => '',
-      ),
-    ),
-    'wrappers' => array(
-      'ds_content' => 'div',
-    ),
-    'layout_wrapper' => 'div',
-    'layout_attributes' => '',
-    'layout_attributes_merge' => 1,
-    'layout_link_attribute' => '',
-    'layout_link_custom' => '',
-    'layout_disable_css' => FALSE,
-  );
-  $export['field_collection_item|field_notification_email|full'] = $ds_layout;
-
-  $ds_layout = new stdClass();
-  $ds_layout->api_version = 1;
   $ds_layout->id = 'node|calendar|form';
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'calendar';
@@ -1013,31 +973,27 @@ function ma_collaboration_tools_ds_layout_settings_info() {
         0 => 'field_pre_actions',
         1 => 'title',
         2 => 'body',
-        3 => 'field_document_page_no_redirect',
-        4 => 'field_test',
-        5 => 'field_oa_media',
-        6 => 'group_following',
-        7 => 'path',
-        8 => 'redirect',
-        13 => 'field_following_protocols',
-        15 => 'field_following_users',
-        16 => 'field_un_following_users',
+        3 => 'field_oa_media',
+        4 => 'group_following',
+        5 => 'path',
+        6 => 'redirect',
+        11 => 'field_following_protocols',
+        13 => 'field_following_users',
+        14 => 'field_un_following_users',
       ),
       'hidden' => array(
-        9 => 'field_item_privacy_setting',
-        10 => 'og_group_ref',
-        11 => 'field_community_ref',
-        12 => 'field_custom_notification_freq',
-        14 => 'field_document_doc_lib_section',
-        17 => '_add_existing_field',
+        7 => 'field_item_privacy_setting',
+        8 => 'og_group_ref',
+        9 => 'field_community_ref',
+        10 => 'field_custom_notification_freq',
+        12 => 'field_document_doc_lib_section',
+        15 => '_add_existing_field',
       ),
     ),
     'fields' => array(
       'field_pre_actions' => 'ds_content',
       'title' => 'ds_content',
       'body' => 'ds_content',
-      'field_document_page_no_redirect' => 'ds_content',
-      'field_test' => 'ds_content',
       'field_oa_media' => 'ds_content',
       'group_following' => 'ds_content',
       'path' => 'ds_content',

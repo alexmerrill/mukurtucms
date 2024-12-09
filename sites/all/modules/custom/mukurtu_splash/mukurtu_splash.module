@@ -21,14 +21,6 @@ function mukurtu_splash_menu() {
     'access callback' => TRUE,
   ];
 
-  // Callback that toggles the Dictionary feature
-  $items['admin/toggle-dictionary'] = [
-    'title' => 'Toggle Dictionary',
-    'page callback' => 'ma_splash_toggle_dictionary',
-    'access arguments' => ['administer site configuration'],
-    'type' => MENU_CALLBACK,
-  ];
-
   // Page to enable/disable collaboration tools.
   if (ma_splash_prerelease_functionality_enabled('ma_collaboration_tools')) {
     $items['manage-collaboration-tools'] = [
@@ -645,6 +637,18 @@ function mukurtu_splash_block_site_config() {
       ];
     }
 
+    if (module_exists('ma_mobile_client')) {
+      $items[] = [
+        'title' => 'Configure Mukurtu Mobile',
+        'href' => 'mukurtu-mobile',
+        'localized_options' => [
+          'attributes' => ['class' => ['opic-dashboard-content']],
+          'query' => drupal_get_destination(),
+        ],
+        'description' => t("Configure access to the site with the Mukurtu Mobile client."),
+      ];
+    }
+
     if (user_access('administer modules')) {
       $items[] = [
         'title' => 'Enable/Disable Mukurtu Modules',
@@ -770,23 +774,6 @@ function mukurtu_splash_block_manage_dictionary() {
 
   $mukurtu_admin = user_role_load_by_name('Mukurtu Administrator');
   $drupal_admin = user_role_load_by_name('administrator');
-
-  if (user_access('administer site configuration')) {
-    if (module_exists('ma_dictionary')) {
-      $title = 'Disable Dictionary';
-      $description = 'The dictionary can be re-enabled later without losing any content.';
-    }
-    else {
-      $title = "Enable Dictionary";
-      $description = 'Any previously added content will be restored.';
-    }
-    $items[] = [
-      'title' => $title,
-      'href' => 'admin/toggle-dictionary',
-      'localized_options' => ['attributes' => ['class' => ['opic-dashboard-content']]],
-      'description' => t($description),
-    ];
-  }
 
   $vocabulary = taxonomy_vocabulary_machine_name_load('language');
   if (user_access('edit terms in ' . $vocabulary->vid)) {
@@ -916,6 +903,13 @@ function mukurtu_splash_block_batch_import() {
       'href' => 'manage/digital-heritage',
       'localized_options' => ['attributes' => ['class' => ['opic-dashboard-content']]],
       'description' => t('Select digital heritage items for exporting to a CSV or XML file.'),
+    ];
+
+    $items[] = [
+      'title' => 'Export Media (Scald Atoms)',
+      'href' => 'manage/scald-atoms',
+      'localized_options' => ['attributes' => ['class' => ['opic-dashboard-content']]],
+      'description' => t('Select media for exporting to a CSV file.'),
     ];
 
     $items[] = [
@@ -1613,9 +1607,11 @@ function mukurtu_splash_block_wizard() {
  * access control system (e.g., doesn't not enable/disable features).
  */
 function ma_splash_prerelease_functionality_enabled($feature) {
-  $enabled = variable_get(MUKURTU_PRERELEASE_FUNCTIONALITY);
-  if (isset($enabled[$feature])) {
-    return $enabled[$feature];
+  if (defined('MUKURTU_PRERELEASE_FUNCTIONALITY')) {
+    $enabled = variable_get(MUKURTU_PRERELEASE_FUNCTIONALITY);
+    if (isset($enabled[$feature])) {
+      return $enabled[$feature];
+    }
   }
   return FALSE;
 }

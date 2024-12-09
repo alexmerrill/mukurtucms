@@ -89,7 +89,7 @@ function mukurtu_resolve_dependencies() {
     // We have removed it as a dependency from the Mukurtu features now, which
     // allows sites to disable the module if they prefer. Here we enable the
     // module as part of new installs for the sake of consistency.
-    module_enable(array('community_tags', 'ma_dictionary'));
+    module_enable(array('ma_dictionary'));
 }
 
 function mukurtu_revert_features () {
@@ -298,6 +298,7 @@ function mukurtu_create_default_content() {
 
   // Set default browse mode.
   _ma_base_theme_set_default_browse('digital-heritage');
+
 }
 
 //function mukurtu_client_form() {

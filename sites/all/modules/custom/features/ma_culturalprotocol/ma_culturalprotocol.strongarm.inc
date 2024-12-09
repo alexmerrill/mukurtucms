@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ma_culturalprotocol.strongarm.inc
@@ -131,6 +132,15 @@ function ma_culturalprotocol_strongarm() {
         'custom_settings' => FALSE,
       ),
       'revision' => array(
+        'custom_settings' => FALSE,
+      ),
+      'mukurtu_mobile' => array(
+        'custom_settings' => TRUE,
+      ),
+      'ical' => array(
+        'custom_settings' => FALSE,
+      ),
+      'teacher_view' => array(
         'custom_settings' => FALSE,
       ),
     ),

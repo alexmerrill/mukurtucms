@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ma_profile.ds.inc
@@ -17,6 +18,11 @@ function ma_profile_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'user';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
+    'mm_sync_content_view_field' => array(
+      'weight' => '2',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
     'personal_collections' => array(
       'weight' => '1',
       'label' => 'above',
@@ -84,11 +90,13 @@ function ma_profile_ds_layout_settings_info() {
       'central' => array(
         0 => 'og_user_node',
         1 => 'personal_collections',
+        2 => 'mm_sync_content_view_field',
       ),
     ),
     'fields' => array(
       'og_user_node' => 'central',
       'personal_collections' => 'central',
+      'mm_sync_content_view_field' => 'central',
     ),
     'classes' => array(
       'layout_class' => array(
@@ -128,8 +136,9 @@ function ma_profile_ds_layout_settings_info() {
       ),
       'hidden' => array(
         8 => 'field_notifications_freq_def',
-        9 => 'ckeditor',
-        10 => '_add_existing_field',
+        9 => 'field_dhan_frequency',
+        10 => 'ckeditor',
+        11 => '_add_existing_field',
       ),
     ),
     'fields' => array(
@@ -142,6 +151,7 @@ function ma_profile_ds_layout_settings_info() {
       'og_user_node' => 'ds_content',
       'redirect' => 'ds_content',
       'field_notifications_freq_def' => 'hidden',
+      'field_dhan_frequency' => 'hidden',
       'ckeditor' => 'hidden',
       '_add_existing_field' => 'hidden',
     ),

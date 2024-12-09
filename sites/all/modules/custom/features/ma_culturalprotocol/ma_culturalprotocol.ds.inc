@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * ma_culturalprotocol.ds.inc
@@ -98,10 +99,20 @@ function ma_culturalprotocol_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'cultural_protocol_group';
   $ds_fieldsetting->view_mode = 'full';
   $ds_fieldsetting->settings = array(
-    'create_content_block_ds_field' => array(
-      'weight' => '7',
+    'mukurtu_mobile_sync' => array(
+      'weight' => '0',
       'label' => 'hidden',
       'format' => 'default',
+    ),
+    'dhan_notify' => array(
+      'weight' => '6',
+      'label' => 'above',
+      'format' => 'default',
+      'formatter_settings' => array(
+        'ft' => array(
+          'lb-col' => TRUE,
+        ),
+      ),
     ),
     'group_management_links' => array(
       'weight' => '2',
@@ -110,6 +121,11 @@ function ma_culturalprotocol_ds_field_settings_info() {
     ),
     'group_members' => array(
       'weight' => '4',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'create_content_block_ds_field' => array(
+      'weight' => '7',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -132,6 +148,31 @@ function ma_culturalprotocol_ds_field_settings_info() {
     ),
   );
   $export['node|cultural_protocol_group|full'] = $ds_fieldsetting;
+
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'node|cultural_protocol_group|mukurtu_mobile';
+  $ds_fieldsetting->entity_type = 'node';
+  $ds_fieldsetting->bundle = 'cultural_protocol_group';
+  $ds_fieldsetting->view_mode = 'mukurtu_mobile';
+  $ds_fieldsetting->settings = array(
+    'title' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'og_group_ref' => array(
+      'formatter_settings' => array(
+        'ft' => array(),
+      ),
+    ),
+    'field_comm_dh_items' => array(
+      'formatter_settings' => array(
+        'ft' => array(),
+      ),
+    ),
+  );
+  $export['node|cultural_protocol_group|mukurtu_mobile'] = $ds_fieldsetting;
 
   $ds_fieldsetting = new stdClass();
   $ds_fieldsetting->api_version = 1;
@@ -332,27 +373,30 @@ function ma_culturalprotocol_ds_layout_settings_info() {
   $ds_layout->settings = array(
     'regions' => array(
       'top' => array(
-        0 => 'field_protocol_image',
+        0 => 'mukurtu_mobile_sync',
+        1 => 'field_protocol_image',
       ),
       'left' => array(
-        1 => 'body',
-        2 => 'group_management_links',
-        3 => 'protocol_dh_items',
+        2 => 'body',
+        3 => 'group_management_links',
+        4 => 'protocol_dh_items',
       ),
       'right' => array(
-        4 => 'group_members',
         5 => 'og_group_ref',
-        6 => 'create_content_block_ds_field',
+        6 => 'dhan_notify',
+        7 => 'create_content_block_ds_field',
+        4 => 'group_members',
       ),
     ),
     'fields' => array(
+      'mukurtu_mobile_sync' => 'top',
       'field_protocol_image' => 'top',
       'body' => 'left',
       'group_management_links' => 'left',
       'protocol_dh_items' => 'left',
-      'body' => 'left',
       'group_members' => 'right',
       'og_group_ref' => 'right',
+      'dhan_notify' => 'right',
       'create_content_block_ds_field' => 'right',
     ),
     'classes' => array(
@@ -374,6 +418,50 @@ function ma_culturalprotocol_ds_layout_settings_info() {
     'layout_disable_css' => FALSE,
   );
   $export['node|cultural_protocol_group|full'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
+  $ds_layout->id = 'node|cultural_protocol_group|mukurtu_mobile';
+  $ds_layout->entity_type = 'node';
+  $ds_layout->bundle = 'cultural_protocol_group';
+  $ds_layout->view_mode = 'mukurtu_mobile';
+  $ds_layout->layout = 'ds_1col';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'ds_content' => array(
+        0 => 'title',
+        1 => 'field_protocol_image',
+        2 => 'body',
+        3 => 'og_group_ref',
+        4 => 'field_comm_dh_items',
+      ),
+    ),
+    'fields' => array(
+      'title' => 'ds_content',
+      'field_protocol_image' => 'ds_content',
+      'body' => 'ds_content',
+      'og_group_ref' => 'ds_content',
+      'field_comm_dh_items' => 'ds_content',
+    ),
+    'limit' => array(
+      'field_comm_dh_items' => '8',
+    ),
+    'classes' => array(
+      'layout_class' => array(
+        '' => '',
+      ),
+    ),
+    'wrappers' => array(
+      'ds_content' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+  );
+  $export['node|cultural_protocol_group|mukurtu_mobile'] = $ds_layout;
 
   $ds_layout = new stdClass();
   $ds_layout->api_version = 1;

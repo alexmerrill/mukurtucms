@@ -281,9 +281,9 @@ function hook_field_schema($field) {
 /**
  * Allow modules to alter the schema for a field.
  *
- * @param $schema
+ * @param array $schema
  *   The schema definition as returned by hook_field_schema().
- * @param $field
+ * @param array $field
  *   The field definition.
  *
  * @see field_retrieve_schema()
@@ -1703,8 +1703,8 @@ function hook_field_storage_info() {
  * Perform alterations on Field API storage types.
  *
  * @param $info
- *   Array of informations on storage types exposed by
- *   hook_field_field_storage_info() implementations.
+ *   An array with information on storage types returned by
+ *   hook_field_storage_info() implementations.
  */
 function hook_field_storage_info_alter(&$info) {
   // Add a setting to a storage type.

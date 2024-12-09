@@ -76,7 +76,6 @@ function ma_community_form_og_ui_add_users_alter(&$form, &$form_state) {
  * Implements hook_form_FORM_ID_alter().
  */
 function ma_community_form_community_node_form_alter(&$form, &$form_state) {
-
   // custom form fields for the Custom TK Label Text, if at community-level customization
   if (!variable_get('mukurtu_use_sitewide_custom_tk_label_text')) {
     $form = array_merge($form, license_custom_tk_label_form_shared($form['#entity']->nid)); // insert the custom form
@@ -97,7 +96,7 @@ function ma_community_form_community_node_form_alter(&$form, &$form_state) {
       $form['#group_children'][$checkbox_fieldname] = 'group_custom_tk_label_text';
       $form['#group_children'][$textfield_container] = 'group_custom_tk_label_text';
     }
-
+    $form['#group_children']['usage_message'] = 'group_custom_tk_label_text';
     $form['#group_children']['tk_label_export_link'] = 'group_custom_tk_label_text';
   }
 
@@ -153,11 +152,12 @@ function ma_community_node_validate($node, $form, &$form_state) {
 
     // Show warning and require confirmation when setting Parent Community
     $old_parent = "_none";
-    if (isset ($form['field_parent_community'][LANGUAGE_NONE]['#default_value'][0])) {
+    if (isset($form['field_parent_community'][LANGUAGE_NONE]['#default_value'][0])) {
       $old_parent = $form['field_parent_community'][LANGUAGE_NONE]['#default_value'][0];
     }
     $new_parent = $form_state['input']['field_parent_community'][LANGUAGE_NONE];
-    if (isset ($new_parent) && $new_parent<>'_none' && $new_parent <> $old_parent) {
+
+    if (isset($new_parent) && $new_parent != "" && $new_parent != '_none' && $new_parent != $old_parent) {
       // Wanted to use $form['storage'] variable here to set if the warning has already been seen (ie. pass on the second save), but storage vars do not work in the validate/submit context (see: http://drupal.stackexchange.com/questions/18333/storing-permanent-value-in-form-while-in-validation-handler), so we need to use a session var instead that is as specific as possible (node:old_parent:new_parent) to this form.
       // One catch with this implementation is that if the user cancels the node submit, or just closes the tab, the session var will remain, so if they try to do the same change later (same node:old_parent:new_parent), the session var will have already been set and it will submit without the warning.
       $warning_key = $form['nid']['#value'] . ":" . $new_parent . ":" . $old_parent;
@@ -166,7 +166,7 @@ function ma_community_node_validate($node, $form, &$form_state) {
         $_SESSION['parent_community_change_warning_issued'][$warning_key] = TRUE;
       }
       else {
-        unset ($_SESSION['parent_community_change_warning_issued'][$warning_key]);
+        unset($_SESSION['parent_community_change_warning_issued'][$warning_key]);
       }
     }
   }

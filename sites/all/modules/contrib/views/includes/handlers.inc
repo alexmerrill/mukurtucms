@@ -17,6 +17,11 @@ function _views_create_handler($definition, $type = 'handler', $handler_type = N
     return;
   }
 
+  // Mukurtu patch. Somehow (PHP 8 specific?) arrays are getting in here and crashing sites.
+  if (is_array($definition['handler'])) {
+    return;
+  }
+
   // class_exists will automatically load the code file.
   if (!empty($definition['override handler']) &&
       !class_exists($definition['override handler'])) {
@@ -151,6 +156,7 @@ function views_get_table_join($table, $base_table) {
  *                    control is provided.
  * - access arguments: An array of arguments for the access callback.
  */
+#[\AllowDynamicProperties]
 class views_handler extends views_object {
 
   /**
@@ -278,6 +284,9 @@ class views_handler extends views_object {
       return $title;
     }
     $title = ($short && isset($this->definition['title short'])) ? $this->definition['title short'] : $this->definition['title'];
+    if (empty($this->definition['group'])) {
+      return $title;
+    }
     return t('!group: !title', array('!group' => $this->definition['group'], '!title' => $title));
   }
 
@@ -325,22 +334,24 @@ class views_handler extends views_object {
    *   Returns the safe value.
    */
   public function sanitize_value($value, $type = NULL) {
-    switch ($type) {
-      case 'xss':
-        $value = filter_xss($value);
-        break;
+    if (!is_null($value) && strlen($value) > 0) {
+      switch ($type) {
+        case 'xss':
+          $value = filter_xss($value);
+          break;
 
-      case 'xss_admin':
-        $value = filter_xss_admin($value);
-        break;
+        case 'xss_admin':
+          $value = filter_xss_admin($value);
+          break;
 
-      case 'url':
-        $value = check_url($value);
-        break;
+        case 'url':
+          $value = check_url($value);
+          break;
 
-      default:
-        $value = check_plain($value);
-        break;
+        default:
+          $value = check_plain($value);
+          break;
+      }
     }
     return $value;
   }
@@ -418,8 +429,10 @@ class views_handler extends views_object {
       '#collapsed' => TRUE,
       '#weight' => 150,
     );
+
     // Allow to alter the default values brought into the form.
-    drupal_alter('views_handler_options', $this->options, $view);
+    // Triggers hook_views_handler_options_alter().
+    drupal_alter('views_handler_options', $this->options, $this);
   }
 
   /**
@@ -802,6 +815,7 @@ class views_handler extends views_object {
  * - numeric: If true, treat this field as numeric, using %d instead of %s in
  *            queries.
  */
+#[\AllowDynamicProperties]
 class views_many_to_one_helper {
 
   /**
@@ -1001,7 +1015,8 @@ class views_many_to_one_helper {
 
       // Clone the join for each table:
       $this->handler->table_aliases = array();
-      foreach ($this->handler->value as $value) {
+      $values = $this->handler->operator === 'not' ? array($this->handler->value) : $this->handler->value;
+      foreach ($values as $value) {
         $join = $this->get_join();
         if ($this->handler->operator == 'and') {
           $join->type = 'INNER';
@@ -1014,6 +1029,9 @@ class views_many_to_one_helper {
           'value' => $value,
           'numeric' => !empty($this->handler->definition['numeric']),
         );
+        if (($this->handler->is_a_group() && is_array($value)) || $this->handler->operator === 'not') {
+          $value = serialize($value);
+        }
         // The table alias needs to be unique to this value across the
         // multiple times the filter or argument is called by the view.
         if (!isset($this->handler->view->many_to_one_aliases[$field][$value])) {
@@ -1027,6 +1045,9 @@ class views_many_to_one_helper {
           if (empty($this->handler->table_alias)) {
             $this->handler->table_alias = $alias;
           }
+        }
+        else {
+          $this->handler->table_aliases[$value] = $this->handler->view->many_to_one_aliases[$field][$value];
         }
       }
     }
@@ -1063,12 +1084,18 @@ class views_many_to_one_helper {
     // should be added via an db_or()/db_and() (TRUE).
     $add_condition = TRUE;
     if ($operator == 'or' && empty($options['reduce_duplicates'])) {
-      if (count($value) > 1) {
+      if (is_array($value) && count($value) > 1) {
         $operator = 'IN';
       }
       else {
         $value = is_array($value) ? array_pop($value) : $value;
-        $operator = '=';
+        if (is_array($value) && count($value) > 1) {
+          $operator = 'IN';
+        }
+	else {
+          $value = is_array($value) ? array_pop($value) : $value;
+          $operator = '=';
+        }
       }
       $add_condition = FALSE;
     }
@@ -1229,7 +1256,7 @@ function views_break_phrase($str, &$handler = NULL) {
  */
 function views_get_timezone() {
   global $user;
-  if (variable_get('configurable_timezones', 1) && $user->uid && strlen($user->timezone)) {
+  if (variable_get('configurable_timezones', 1) && $user->uid && isset($user->timezone) && strlen($user->timezone)) {
     $timezone = $user->timezone;
   }
   else {
@@ -1560,6 +1587,7 @@ function views_date_sql_extract($extract_type, $field, $field_type = 'int', $set
  *   - extra type: How all the extras will be combined. Either AND or OR.
  *     Defaults to AND.
  */
+#[\AllowDynamicProperties]
 class views_join {
   public $table = NULL;
   public $left_table = NULL;
@@ -1675,15 +1703,18 @@ class views_join {
           }
 
           if (is_array($info['value'])) {
+            $value_placeholders = array();
+
             // With an array of values, we need multiple placeholders and the
             // 'IN' operator is implicit.
             foreach ($info['value'] as $value) {
               $placeholder_i = $view_query->placeholder('views_join_condition_');
+              $value_placeholders[] = $placeholder_i;
               $arguments[$placeholder_i] = $value;
             }
 
             $operator = !empty($info['operator']) ? $info['operator'] : 'IN';
-            $placeholder = '( ' . implode(', ', array_keys($arguments)) . ' )';
+            $placeholder = '( ' . implode(', ', $value_placeholders) . ' )';
           }
           else {
             // With a single value, the '=' operator is implicit.
@@ -1722,6 +1753,7 @@ class views_join {
  *   Same as views_join class above, except:
  *   - left_query: The subquery to use in the left side of the join clause.
  */
+#[\AllowDynamicProperties]
 class views_join_subquery extends views_join {
 
   /**

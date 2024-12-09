@@ -2,7 +2,7 @@
 /**
  * @file
  * General structure is drop down of all communities hierarchy the user has permission to which then populates a list of sub-protocols in a second drop down
- * theme the drop down in chosen
+ * theme the drop down in select2
  *
  */
 
@@ -46,10 +46,42 @@ function mukurtu_protocol_field_node_insert($node) {
  */
 function mukurtu_protocol_field_form_alter(&$form, &$form_state, $form_id) {
 
+  $disable_field = FALSE;
   $node_type = str_replace('_node_form', '', $form_id, $count);
   if ($count && ma_cultural_protocol_node_type_can_have_cp_except_hidden($node_type)) {
     // Hide the original Protocol field.
     $form['og_group_ref']['#access'] = FALSE;
+
+    if (isset($form['#node_edit_form']) and $form['#node_edit_form']) {
+      if (!isset($form['#node'])) {
+        return;
+      }
+      $node = $form['#node'];
+      $allowed_protocols = ma_cultural_protocol_get_cps_user_can_post_to();
+      $privacy_setting = $node->field_item_privacy_setting[LANGUAGE_NONE][0]['value'] ?? 'all';
+      if ($privacy_setting == 'all') {
+        foreach ($node->og_group_ref[LANGUAGE_NONE] as $delta => $value) {
+          if (!isset($allowed_protocols[$value['target_id']])) {
+            $disable_field = TRUE;
+            $form['og_group_ref']['#access'] = FALSE;
+            $form['field_item_privacy_setting']['#access'] = FALSE;
+          }
+        }
+      }
+
+      if ($privacy_setting == 'any') {
+        $form['og_group_ref']['#access'] = FALSE;
+        $form['field_item_privacy_setting']['#access'] = FALSE;
+        $disable_field = TRUE;
+        foreach ($node->og_group_ref[LANGUAGE_NONE] as $delta => $value) {
+          if (isset($allowed_protocols[$value['target_id']])) {
+            $disable_field = FALSE;
+            $form['og_group_ref']['#access'] = TRUE;
+            $form['field_item_privacy_setting']['#access'] = TRUE;
+          }
+        }
+      }
+    }
 
     // Do not create this custom field for Book Pages
     if(isset($form_state['mukurtu_book_parent'])) {
@@ -59,14 +91,14 @@ function mukurtu_protocol_field_form_alter(&$form, &$form_state, $form_id) {
     // Do not create this custom field for Book Pages
     // Also hide the Item Sharing Settings field
     if (isset($form['field_book_parent'])) {
-      if ($form['field_book_parent'][LANGUAGE_NONE][0]['target_id']['#default_value'] OR arg(3) == 'book-page') {
+      if (isset($form['field_book_parent'][LANGUAGE_NONE][0]['target_id']['#default_value']) OR arg(3) == 'book-page') {
         $form['field_item_privacy_setting']['#access'] = FALSE;
         return;
       }
     }
 
     // Build the custom protocol field.
-    list ($form, $form_state) = mukurtu_protocol_field_custom_field($form, $form_state, $node_type);
+    list ($form, $form_state) = mukurtu_protocol_field_custom_field($form, $form_state, $node_type, FALSE, $disable_field);
 
   }
 }
@@ -75,7 +107,7 @@ function mukurtu_protocol_field_form_alter(&$form, &$form_state, $form_id) {
  * Build a custom protocol field. This is called both by the mukurtu_protocol_field module on node forms,
  * and by the Dublin Core XML importer form.
  */
-function mukurtu_protocol_field_custom_field($form, $form_state, $node_type, $import_form = FALSE) {
+function mukurtu_protocol_field_custom_field($form, $form_state, $node_type, $import_form = FALSE, $disabled = FALSE) {
   // Gather group field info
   if (isset($form['#group_children']['og_group_ref'])) {
     $form['#group_children']['oggroup_fieldset'] = $form['#group_children']['og_group_ref'];
@@ -90,11 +122,13 @@ function mukurtu_protocol_field_custom_field($form, $form_state, $node_type, $im
     foreach ($cps as $cp) {
       $cp_nid = $cp['target_id'];
       $cp_wrapper = entity_metadata_wrapper('node', $cp_nid);
-      $community_nodes = $cp_wrapper->og_group_ref->value();
-      $community_node = $community_nodes[0];
-      $community_nid = $community_node->nid;
-      $structure[$community_nid][] = $cp_nid;
-      $community_defaults_with_titles[$community_nid] = $community_node->title;
+      if (isset($cp_wrapper->og_group_ref)) {
+        $community_nodes = $cp_wrapper->og_group_ref->value();
+        $community_node = $community_nodes[0];
+        $community_nid = $community_node->nid;
+        $structure[$community_nid][] = $cp_nid;
+        $community_defaults_with_titles[$community_nid] = $community_node->title;
+      }
     }
   }
 
@@ -188,6 +222,7 @@ function mukurtu_protocol_field_custom_field($form, $form_state, $node_type, $im
     // Community dropdown
     $form['oggroup_fieldset'][$i]['dropdown_first'] = array(
       '#type' => 'select',
+      '#select2' => [],
       '#title' => 'Community',
       '#options' => $options_first,
       '#default_value' => $selected,
@@ -199,7 +234,6 @@ function mukurtu_protocol_field_custom_field($form, $form_state, $node_type, $im
         'event' => 'change',
         'wrapper' => 'dropdown-second-replace-'.$i,
       ),
-      '#attributes' => array ('class' => array('chosen-enable')),
     );
 
 
@@ -222,6 +256,7 @@ function mukurtu_protocol_field_custom_field($form, $form_state, $node_type, $im
     // Protocol dropdown
     $form['oggroup_fieldset'][$i]['dropdown_second'] = array(
       '#type' => 'select',
+      '#select2' => [],
       '#title' => t('Protocol'),
       // The entire enclosing div created here gets replaced when dropdown_first
       // is changed.
@@ -232,7 +267,6 @@ function mukurtu_protocol_field_custom_field($form, $form_state, $node_type, $im
       '#options' => _ajax_get_protocol_by_community_dropdown_options($selected, $protocol_defaults, $import_form),
       '#default_value' => $protocol_defaults,
       '#multiple' => TRUE,
-      '#attributes' => array ('class' => array('chosen-enable')),
     );
     if ($i == 0 && ma_cultural_protocol_node_type_must_have_cp($node_type)) {
       $form['oggroup_fieldset'][$i]['dropdown_second']['#required'] = TRUE;
@@ -253,6 +287,16 @@ function mukurtu_protocol_field_custom_field($form, $form_state, $node_type, $im
   // Validate the custom field.
   if (!$import_form) {
     array_unshift($form['#validate'], 'mukurtu_protocol_field_form_validate');
+  }
+
+  if ($disabled) {
+    $form['oggroup_fieldset']['#access'] = FALSE;
+    foreach ($form['oggroup_fieldset'] as $delta => $value) {
+      if (is_numeric($delta)) {
+        $form['oggroup_fieldset'][$delta]['dropdown_first']['#access'] = FALSE;
+        $form['oggroup_fieldset'][$delta]['dropdown_second']['#access'] = FALSE;
+      }
+    }
   }
 
   // Return the form and form_sate
@@ -326,7 +370,10 @@ function _ajax_get_community_dropdown_options($community_defaults_with_titles, $
   foreach ($group_ids as $group_id) {
     $group_node = node_load($group_id);
     if ($group_node->type == 'community') {
-      $postable_communities[$group_id] = $group_node->title;
+      $postable_protocols_for_community =_ajax_get_protocol_by_community_dropdown_options($group_id, [], FALSE);
+      if (count($postable_protocols_for_community)) {
+        $postable_communities[$group_id] = $group_node->title;
+      }
     }
   }
   $referenceable_communities = array(0 => 'Select a community') + $community_defaults_with_titles + $postable_communities;
@@ -426,7 +473,7 @@ function mukurtu_protocol_field_node_access($node, $op, $account) {
         if (ma_cultural_protocol_node_type_must_have_cp($node->type)) {
           return NODE_ACCESS_DENY;  // Safeguard. This should never happen as the CP is a required field for these cases.
         }
-        return NODE_ACCESS_ALLOW;
+        return $node->status ? NODE_ACCESS_ALLOW : NODE_ACCESS_IGNORE;
       }
 
       $groups_on_node = array_values($groups_on_node['node']);
@@ -435,11 +482,11 @@ function mukurtu_protocol_field_node_access($node, $op, $account) {
       if ($node->field_item_privacy_setting['und'][0]['value'] == 'any') {
         foreach ($groups_on_node as $group) {
           if (og_is_member('node', $group)) {
-            return NODE_ACCESS_ALLOW; // Pass if user is a member of the group
+            return $node->status ? NODE_ACCESS_ALLOW : NODE_ACCESS_IGNORE; // Pass if user is a member of the group
           }
           $group_emw = entity_metadata_wrapper('node', $group);
           if ($group_emw->group_access->value() == 0) {
-            return NODE_ACCESS_ALLOW; // Pass if it's an open group
+            return $node->status ? NODE_ACCESS_ALLOW : NODE_ACCESS_IGNORE; // Pass if it's an open group
           }
         }
         return NODE_ACCESS_DENY;
@@ -457,7 +504,7 @@ function mukurtu_protocol_field_node_access($node, $op, $account) {
             }
           }
         }
-        return NODE_ACCESS_ALLOW;
+        return $node->status ? NODE_ACCESS_ALLOW : NODE_ACCESS_IGNORE;
       }
     }
   }
@@ -479,7 +526,7 @@ function mukurtu_protocol_field_node_access_records($node) {
       $cp_nids = array_values($cps['node']);
       foreach ($cp_nids as $cp_nid) {
         $cp_emw = entity_metadata_wrapper('node', $cp_nid);
-        if ($cp_emw->group_access->value() == 0) { // Open group
+        if (isset($cp_emw->group_access) AND $cp_emw->group_access->value() == 0) { // Open CP
           $grants = array();
           $grants[] = array(
             'realm' => 'mukurtu_nodes_in_cp_any_public_group',
